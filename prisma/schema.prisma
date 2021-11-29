@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+// Models
+
+model Broas {
+  id           Int      @id @default(autoincrement())
+  wrongVersion String   @db.VarChar(255)
+  rightVersion String   @db.VarChar(255)
+  author       String   @default("Desconhecido") @db.VarChar(100)
+  updatedAt    DateTime @default(now())
+  CreatedAt    DateTime @default(now())
+}
