@@ -2,9 +2,9 @@ import { Broa } from ".prisma/client";
 import create from "zustand";
 
 type BroaStoreType = {
-  broas: Broas[];
-  setBroas: (broas: Broas[]) => void;
-  addBroa: (broa: Broas) => void;
+  broas: Broa[];
+  setBroas: (broas: Broa[]) => void;
+  addBroa: (broa: Broa) => void;
 };
 
 export const useBroasStore = create<BroaStoreType>((set) => ({
