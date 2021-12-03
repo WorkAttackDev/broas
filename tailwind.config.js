@@ -1,6 +1,6 @@
 module.exports = {
   purge: ["./pages/**/*.{js,ts,jsx,tsx}", "./features/**/*.{js,ts,jsx,tsx}"],
-  type: "jit",
+  mode: "jit",
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {

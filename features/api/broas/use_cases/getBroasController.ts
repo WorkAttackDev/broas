@@ -3,7 +3,7 @@ import prisma from "../../../core/config/prisma";
 
 export const getBroasController = async (res: NextApiResponse) => {
   try {
-    const broas = await prisma.broas.findMany();
+    const broas = await prisma.broa.findMany();
     res.status(200).json(broas);
   } catch (error) {
     console.log(error);

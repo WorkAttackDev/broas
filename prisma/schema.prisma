@@ -15,11 +15,13 @@ datasource db {
 
 // Models
 
-model Broas {
+model Broa {
   id           Int      @id @default(autoincrement())
   wrongVersion String   @db.VarChar(255)
   rightVersion String   @db.VarChar(255)
   author       String   @default("Desconhecido") @db.VarChar(100)
   updatedAt    DateTime @default(now())
-  CreatedAt    DateTime @default(now())
+  createdAt    DateTime @default(now())
+
+  @@map("broas")
 }

@@ -5,15 +5,15 @@ export const getBroaByIdController = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const { id } = req.query;
+  const id = req.query.id as string;
 
-  if (typeof id !== "number") {
+  if (isNaN(+id)) {
     res.status(400).end(`id inválido`);
     return;
   }
 
   try {
-    const broa = await prisma.broas.findUnique({ where: { id } });
+    const broa = await prisma.broa.findUnique({ where: { id: parseInt(id) } });
     res.status(200).json(broa);
   } catch (error) {
     console.log(error);

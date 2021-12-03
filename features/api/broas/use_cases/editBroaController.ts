@@ -1,4 +1,4 @@
-import { Broas } from ".prisma/client";
+import { Broa } from ".prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../core/config/prisma";
 
@@ -7,7 +7,7 @@ export const editBroaController = async (
   res: NextApiResponse
 ) => {
   const { id } = req.query;
-  const { wrongVersion, rightVersion, author } = req.body as Broas;
+  const { wrongVersion, rightVersion, author } = req.body as Broa;
 
   if (typeof id !== "number") {
     res.status(400).end(`id inválido`);
@@ -20,7 +20,7 @@ export const editBroaController = async (
   }
 
   try {
-    const updatedBroa = await prisma.broas.update({
+    const updatedBroa = await prisma.broa.update({
       where: { id: +id },
       data: {
         rightVersion,

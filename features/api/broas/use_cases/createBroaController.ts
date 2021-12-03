@@ -1,26 +1,32 @@
-import { Broas } from ".prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../core/config/prisma";
+import {
+  createBroaValidation,
+  ValidationError,
+} from "../../../shared/lib/validation";
 
 export const createBroaController = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const { wrongVersion, rightVersion, author } = req.body as Broas;
-
-  if ([wrongVersion, rightVersion].some((_field) => !_field.trim().length)) {
-    res.status(400).end(`Preencha todos os campos`);
-    return;
-  }
-
   try {
-    const newBroa = await prisma.broas.create({
-      data: { rightVersion, wrongVersion, author },
-    });
+    const validatedData = createBroaValidation(req.body);
 
-    res.status(201).json(newBroa);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Ocorreu um erro a cria a broa" });
+    try {
+      const newBroa = await prisma.broa.create({
+        data: validatedData,
+      });
+
+      res.status(201).json(newBroa);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: "Ocorreu um erro a cria a broa" });
+    }
+  } catch (err) {
+    const error = err as ValidationError;
+    console.log(err);
+
+    res.status(400).end(error.errors.toString());
+    return;
   }
 };
