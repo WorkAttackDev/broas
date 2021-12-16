@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getBroaByIdController } from "../../../features/api/broas/use_cases/getBroaByIdController";
+import { deleteBroaController } from "../../../features/api/broas/controllers/deleteBroaController";
+import { getBroaByIdController } from "../../../features/api/broas/controllers/getBroaByIdController";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,6 +11,11 @@ export default async function handler(
   switch (method) {
     case "GET": {
       await getBroaByIdController(req, res);
+      break;
+    }
+
+    case "DELETE": {
+      await deleteBroaController(req, res);
       break;
     }
 

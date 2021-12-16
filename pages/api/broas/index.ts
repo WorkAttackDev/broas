@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getBroasController } from "../../../features/api/broas/use_cases/getBroasController";
+import { getBroasController } from "../../../features/api/broas/controllers/getBroasController";
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,10 +7,16 @@ export default async function handler(
 ) {
   const { method } = req;
 
+  // try {
+  //   await AuthMiddleware(req, res);
+  // } catch (error) {
+  //   return handleServerError(res, 401, ["bearer token inválido"]);
+  // }
+
   switch (method) {
     case "GET": {
       await getBroasController(res);
-      break;
+      return;
     }
     default:
       res.setHeader("Allow", ["GET"]);

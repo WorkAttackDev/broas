@@ -1,13 +1,38 @@
-import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import React from "react";
-import Header from "../features/core/components/Header";
+import Script from "next/script";
+import React, { useEffect } from "react";
+import Header from "../features/client/core/components/Header";
+import useApi from "../features/client/core/hooks/use_api";
+import { useAuthStore } from "../features/client/core/stores/authStore";
+import { meClient } from "../features/client/user/client";
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const meQuery = useApi<typeof meClient>();
+  const setUser = useAuthStore((s) => s.setUser);
+
+  const [test, setTest] = React.useState("");
+
+  useEffect(() => {
+    (async () => {
+      const user = await meQuery.request(meClient());
+      if (!user) return;
+      setUser(user);
+    })();
+  }, []);
+
+  useEffect(() => {
+    console.log(test);
+  }, [test]);
+
   return (
     <>
       <Header />
       <Component {...pageProps} />
+      <Script
+        src='https://accounts.google.com/gsi/client'
+        strategy='beforeInteractive'
+      />
     </>
   );
 }

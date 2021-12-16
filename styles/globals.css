@@ -8,7 +8,7 @@
 @layer base {
   html,
   body {
-    @apply flex flex-col h-screen w-full bg-brand-gray;
+    @apply flex flex-col h-screen w-full bg-brand-gray text-brand-gray-3;
     font-size: 62.5%;
     font-family: "Comfortaa", cursive;
   }

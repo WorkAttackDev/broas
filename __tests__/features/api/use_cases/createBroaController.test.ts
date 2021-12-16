@@ -1,5 +1,5 @@
 import { createMocks } from "node-mocks-http";
-import { createBroaController } from "../../../../features/api/broas/use_cases/createBroaController";
+import { createBroaController } from "../../../../features/api/broas/controllers/createBroaController";
 
 describe("/api/broas/edit", () => {
   test("returns status 400 caused by a validation error", async () => {

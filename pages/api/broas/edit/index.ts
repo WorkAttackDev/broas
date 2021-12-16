@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { createBroaController } from "../../../../features/api/broas/use_cases/createBroaController";
+import { createBroaController } from "../../../../features/api/broas/controllers/createBroaController";
 
 export default async function handler(
   req: NextApiRequest,

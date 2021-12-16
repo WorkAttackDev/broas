@@ -1,22 +1,21 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
-import { editBroaController } from "../../../../features/api/broas/use_cases/editBroaController";
+import { updateBroaController } from "../../../../features/api/broas/controllers/updateBroaController";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { method } = req;
-  const { id } = req.query;
 
   switch (method) {
-    case "PUT": {
-      await editBroaController(req, res);
+    case "POST": {
+      await updateBroaController(req, res);
 
       break;
     }
     default:
-      res.setHeader("Allow", ["PUT"]);
+      res.setHeader("Allow", ["POST"]);
       res.status(405).end(`Metodo ${method} não permitido`);
       break;
   }
