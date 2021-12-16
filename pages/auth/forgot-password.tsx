@@ -45,7 +45,7 @@ const ForgetPasswordPage: NextPage = () => {
       />
       <Popup
         isOpen={!!forgetPasswordMutation.error}
-        texts={[forgetPasswordMutation.error]}
+        texts={forgetPasswordMutation.error ?? []}
         onClose={forgetPasswordMutation.reset}
       />
     </main>
