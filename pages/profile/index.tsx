@@ -102,7 +102,7 @@ const ProfilePage: NextPage = ({}) => {
     if (!user) return;
 
     request(getBroasByUserIdClient(user.id));
-  }, [request, user]);
+  }, [user]);
 
   useEffect(() => {
     if (error || logoutQuery.error || editUserMutation.error)
