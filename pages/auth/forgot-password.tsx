@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import React, { FormEvent } from "react";
 import Loading from "../../features/client/core/components/Loading";
+import MainLayout from "../../features/client/core/components/MainLayout";
 import Popup from "../../features/client/core/components/Popup";
 import useApi from "../../features/client/core/hooks/use_api";
 import useForm from "../../features/client/core/hooks/use_form";
@@ -35,8 +36,8 @@ const ForgetPasswordPage: NextPage = () => {
   };
 
   return (
-    <main className='flex justify-center align-center p-16'>
-      <Loading isLoading={forgetPasswordMutation.loading} />
+    <MainLayout className='flex justify-center align-center'>
+      <Loading className='h-full' isLoading={forgetPasswordMutation.loading} />
       <AuthForm
         handleChange={handleChange}
         submitText='redefinir password'
@@ -48,7 +49,7 @@ const ForgetPasswordPage: NextPage = () => {
         texts={forgetPasswordMutation.error ?? []}
         onClose={forgetPasswordMutation.reset}
       />
-    </main>
+    </MainLayout>
   );
 };
 

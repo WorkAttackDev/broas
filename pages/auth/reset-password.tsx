@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect, useRef, useState } from "react";
 import Loading from "../../features/client/core/components/Loading";
+import MainLayout from "../../features/client/core/components/MainLayout";
 import Popup from "../../features/client/core/components/Popup";
 import { links } from "../../features/client/core/data/links";
 import useApi from "../../features/client/core/hooks/use_api";
@@ -68,8 +69,8 @@ const ResetPasswordPage: NextPage = () => {
   };
 
   return (
-    <main className='flex justify-center align-center p-16'>
-      <Loading isLoading={resetPasswordMutation.loading} />
+    <MainLayout className='flex justify-center align-center'>
+      <Loading className='h-full' isLoading={resetPasswordMutation.loading} />
       <AuthForm
         handleChange={handleChange}
         submitText='salvar password'
@@ -81,7 +82,7 @@ const ResetPasswordPage: NextPage = () => {
         texts={resetPasswordMutation.error || []}
         onClose={() => setShowPopup(false)}
       />
-    </main>
+    </MainLayout>
   );
 };
 

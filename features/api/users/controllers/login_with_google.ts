@@ -9,7 +9,7 @@ import { MyUser } from "../../../shared/models/my_user";
 import { ApiResponse } from "../../core/types";
 import { hash } from "../util/hash";
 import { issueJWToken } from "../util/jwt";
-import { sanitizedUser } from "./util";
+import { sanitizedUser, slugify } from "./util";
 import cuid from "cuid";
 
 export const loginWithGoogleController = async (
@@ -44,7 +44,7 @@ export const loginWithGoogleController = async (
           picture,
           providerId: ["google", sub].join("|"),
           emailVerified: email_verified,
-          userName: name.toLowerCase() + " " + cuid(),
+          userName: slugify(name.toLowerCase()) + "-" + cuid(),
           password: await hash(["google", sub].join("|")),
         },
       });

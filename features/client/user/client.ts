@@ -6,6 +6,7 @@ import {
   LoginWithGoogleValidationParams,
   ResetPasswordParams,
 } from "../../shared/lib/validation";
+import { EditUserValidationParams } from "../../shared/lib/validation/edit_user_validator";
 import { MyUser } from "../../shared/models/my_user";
 import { AxiosInstance } from "../core/config/client";
 
@@ -17,6 +18,7 @@ export const AuthForgetPasswordEndpoint = "/auth/forget_password";
 export const AuthResetPasswordEndpoint = "/auth/reset_password";
 export const AuthLogoutEndpoint = "/auth/logout";
 export const AuthMeEndpoint = "/auth/me";
+export const AuthEditUserEndpoint = "/auth/edit_user";
 
 // * API call functions
 
@@ -66,5 +68,13 @@ export const meClient = async () => {
     AuthMeEndpoint
   );
 
+  return res.data.data;
+};
+
+export const editUserClient = async (data: EditUserValidationParams) => {
+  const res = await AxiosInstance.post<any, AxiosResponse<ApiResponse<MyUser>>>(
+    AuthEditUserEndpoint,
+    data
+  );
   return res.data.data;
 };

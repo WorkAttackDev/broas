@@ -1,3 +1,4 @@
+import { RefreshIcon } from "@heroicons/react/outline";
 import { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 
 type Props = DetailedHTMLProps<
@@ -43,6 +44,7 @@ const Button: React.FC<Props> = ({
     >
       {Icon && <Icon className={`${iconSizeClass} ${iconLoadingClass} mr-2`} />}
       {children}
+      {isLoading && <RefreshIcon className={`ml-2 w-6 h-6 animate-spin`} />}
     </button>
   );
 };

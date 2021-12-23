@@ -1,7 +1,8 @@
-import { Broa } from ".prisma/client";
+import { Broa, BroaReaction } from ".prisma/client";
 import { AxiosResponse } from "axios";
 import { ApiResponse } from "../../api/core/types";
-import { EditBroaValidationParams } from "../../shared/lib/validation";
+import { EditBroaValidationParams } from "../../shared/lib/validation/edit_broa_validator";
+import { ToggleReactionValidatorParams } from "../../shared/lib/validation/toggleReactionValidate";
 import { AxiosInstance } from "../core/config/client";
 
 export const getBroasClient = async () => {
@@ -17,9 +18,16 @@ export const getBroasClient = async () => {
   }
 };
 
+export const getBroasByUserIdClient = async (userId: number) => {
+  const res = await AxiosInstance.get<any, AxiosResponse<ApiResponse<Broa[]>>>(
+    "/broas/" + userId + "/broas"
+  );
+  return res.data.data;
+};
+
 export const getBroaByIdClient = async (id: string) => {
   const res = await AxiosInstance.get<any, AxiosResponse<ApiResponse<Broa>>>(
-    "/broas/" + id
+    "/broas/" + id + "/broa"
   );
   return res.data.data;
 };
@@ -29,8 +37,6 @@ export const createBroaClient = async (data: EditBroaValidationParams) => {
     "/broas/edit",
     data
   );
-
-  console.log(res.data);
 
   return res.data.data;
 };
@@ -47,11 +53,25 @@ export const updateBroaClient = async (
   return res.data.data;
 };
 
-export const deleteBroaClient = async (id: number) => {
+export const deleteBroaClient = async (id: number, userId: number) => {
   const res = await AxiosInstance.delete<
     any,
     AxiosResponse<ApiResponse<boolean>>
-  >("/broas/" + id);
+  >("/broas/" + id, {
+    data: { userId },
+  });
+
+  return res.data.data;
+};
+
+//* Reactions
+export const toggleReactionClient = async (
+  data: ToggleReactionValidatorParams
+) => {
+  const res = await AxiosInstance.post<
+    any,
+    AxiosResponse<ApiResponse<(BroaReaction & { broa?: Broa }) | null>>
+  >("/broas/reaction", data);
 
   return res.data.data;
 };

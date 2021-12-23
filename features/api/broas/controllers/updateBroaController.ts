@@ -2,6 +2,7 @@ import { Broa } from ".prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../client/core/config/prisma";
 import { handleServerError } from "../../../shared/lib/server_errors";
+import { editBroaValidate } from "../../../shared/lib/validation/edit_broa_validator";
 import { ApiResponse } from "../../core/types";
 
 export const updateBroaController = async (
@@ -9,19 +10,30 @@ export const updateBroaController = async (
   res: NextApiResponse<ApiResponse<Broa>>
 ) => {
   const { id } = req.query;
-  const { wrongVersion, rightVersion, author } = req.body as Broa;
+  const { wrongVersion, rightVersion, author, userId } = editBroaValidate(
+    req.body
+  );
 
   if (isNaN(+id)) {
     handleServerError(res, 400, ["id inválido"]);
     return;
   }
 
-  if ([wrongVersion, rightVersion].some((_field) => !_field.trim().length)) {
-    handleServerError(res, 400, ["preencha todos os campos"]);
-    return;
-  }
-
   try {
+    const broa = await prisma.broa.findFirst({
+      where: { id: +id, AND: { userId } },
+      include: { user: true },
+    });
+
+    console.log(
+      (!broa || broa.userId !== +userId) && broa?.user?.role !== "ADMIN"
+    );
+
+    if ((!broa || broa.userId !== +userId) && broa?.user?.role !== "ADMIN") {
+      handleServerError(res, 404, ["broa não encontrada"]);
+      return;
+    }
+
     const updatedBroa = await prisma.broa.update({
       where: { id: +id },
       data: {

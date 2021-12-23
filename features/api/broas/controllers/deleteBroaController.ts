@@ -10,18 +10,25 @@ export const deleteBroaController = async (
 ) => {
   const id = req.query.id as string;
 
+  const { userId } = req.body;
+
   if (isNaN(+id)) {
     handleServerError(res, 400, ["id inválido"]);
     return;
   }
 
   try {
-    const broa = await prisma.broa.delete({ where: { id: parseInt(id) } });
+    const broa = await prisma.broa.findUnique({
+      where: { id: +id },
+      include: { user: true },
+    });
 
-    if (!broa) {
-      handleServerError(res, 400, ["broa não encontrada"]);
+    if ((!broa || broa.userId !== +userId) && broa?.user?.role !== "ADMIN") {
+      handleServerError(res, 404, ["broa não encontrada"]);
       return;
     }
+
+    await prisma.broa.delete({ where: { id: parseInt(id) } });
 
     res.status(200).json({ data: true, errors: null });
   } catch (error) {

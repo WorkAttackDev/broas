@@ -1,17 +1,17 @@
 import { Broa } from "@prisma/client";
 import React, { FormEvent, useState } from "react";
+import { ValidationError } from "../../../shared/lib/validation";
 import {
-  editBroaValidation,
+  editBroaValidate,
   EditBroaValidationParams,
-  ValidationError,
-} from "../../../shared/lib/validation";
+} from "../../../shared/lib/validation/edit_broa_validator";
 import Button from "../../core/components/Button";
 import InputField from "../../core/components/InputField";
 import TextAreaField from "../../core/components/TextAreaField";
 import useForm from "../../core/hooks/use_form";
 
 type Props = {
-  onSubmit: (data: EditBroaValidationParams) => void;
+  onSubmit: (data: Omit<EditBroaValidationParams, "userId">) => void;
   onCancel?: () => void;
   className?: string;
   broa?: Broa;
@@ -20,18 +20,19 @@ type Props = {
 const EditBroaForm = ({ onSubmit, onCancel, className = "", broa }: Props) => {
   const [errors, setErrors] = useState<string[]>([]);
 
-  const { formValues: editBroaRef, handleChange } =
-    useForm<EditBroaValidationParams>({
-      author: broa?.author || "",
-      rightVersion: broa?.rightVersion || "",
-      wrongVersion: broa?.wrongVersion || "",
-    });
+  const { formValues: editBroaRef, handleChange } = useForm<
+    Omit<EditBroaValidationParams, "userId">
+  >({
+    author: broa?.author || "",
+    rightVersion: broa?.rightVersion || "",
+    wrongVersion: broa?.wrongVersion || "",
+  });
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const validatedData = editBroaValidation(editBroaRef);
+      const validatedData = editBroaValidate({ ...editBroaRef, userId: -1 });
       onSubmit(validatedData);
     } catch (err) {
       if ((err as ValidationError).errors) {

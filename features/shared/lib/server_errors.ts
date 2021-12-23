@@ -15,7 +15,9 @@ export const handleServerValidationError = (
   err: any
 ) => {
   const error = err as ValidationError;
+  console.log(error);
+
   res
     .status(status)
-    .json({ data: null, errors: error.errors.map((err) => err.message) });
+    .json({ data: null, errors: error.errors?.map((err) => err.message) });
 };

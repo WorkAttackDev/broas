@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { FormEvent, useEffect } from "react";
 import Loading from "../../features/client/core/components/Loading";
+import MainLayout from "../../features/client/core/components/MainLayout";
 import Popup from "../../features/client/core/components/Popup";
 import useApi from "../../features/client/core/hooks/use_api";
 import useForm from "../../features/client/core/hooks/use_form";
@@ -75,8 +76,9 @@ const LoginPage: NextPage = () => {
   };
 
   return (
-    <main className='flex justify-center align-center p-16'>
+    <MainLayout className='flex justify-center align-center '>
       <Loading
+        className='h-full'
         isLoading={loginMutation.loading || loginWithGoogleMutation.loading}
       />
       <AuthForm
@@ -95,7 +97,7 @@ const LoginPage: NextPage = () => {
           ...(loginWithGoogleMutation.error || []),
         ]}
       />
-    </main>
+    </MainLayout>
   );
 };
 

@@ -5,7 +5,7 @@ import {
   handleServerError,
   handleServerValidationError,
 } from "../../../shared/lib/server_errors";
-import { editBroaValidation } from "../../../shared/lib/validation";
+import { editBroaValidate } from "../../../shared/lib/validation/edit_broa_validator";
 import { ApiResponse } from "../../core/types";
 
 export const createBroaController = async (
@@ -13,7 +13,7 @@ export const createBroaController = async (
   res: NextApiResponse<ApiResponse<Broa>>
 ) => {
   try {
-    const validatedData = editBroaValidation(req.body);
+    const validatedData = editBroaValidate(req.body);
 
     try {
       const newBroa = await prisma.broa.create({

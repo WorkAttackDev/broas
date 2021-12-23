@@ -1,4 +1,4 @@
-import { Broa } from ".prisma/client";
+import { Broa, BroaReaction } from ".prisma/client";
 import {
   CheckIcon,
   EmojiHappyIcon,
@@ -6,18 +6,66 @@ import {
   XIcon,
 } from "@heroicons/react/outline";
 import { format } from "date-fns";
-import React from "react";
-import { links } from "../data/links";
-import Button from "./Button";
 import Link from "next/link";
+import React, { useCallback, useEffect } from "react";
+import { toggleReactionValidate } from "../../../shared/lib/validation/toggleReactionValidate";
+import { MyUser } from "../../../shared/models/my_user";
+import { toggleReactionClient } from "../../broa/client";
+import { links } from "../data/links";
+import useApi from "../hooks/use_api";
+import { handleClientValidationError } from "../utils/client_errors";
+import Button from "./Button";
 
 type Props = {
-  broa: Broa;
+  broa: Broa & {
+    reactions?: BroaReaction[];
+  };
   className?: string;
-  editorMode?: boolean;
+  user: MyUser | null;
 };
 
-const Card = ({ broa, className = "", editorMode = false }: Props) => {
+const Card = ({ broa, className = "", user }: Props) => {
+  const toggleReactionMutation = useApi<typeof toggleReactionClient>();
+
+  const [userReaction, setUserReaction] = React.useState<BroaReaction | null>();
+
+  const [editorMode, setEditorMode] = React.useState(false);
+  const [localBroa, setLocalBroa] = React.useState<
+    | (Broa & {
+        reactions?: BroaReaction[];
+      })
+    | undefined
+  >(broa);
+
+  useEffect(() => {
+    const foundedReaction = broa.reactions?.find((r) => r.userId === user?.id);
+
+    setUserReaction(foundedReaction);
+    setEditorMode(broa?.userId === user?.id || user?.role === "ADMIN");
+  }, [user, broa]);
+
+  const handleReaction = useCallback(async () => {
+    if (user === null || user === undefined) return;
+
+    try {
+      const validatedData = toggleReactionValidate({
+        broaId: broa.id,
+        userId: user.id,
+        reactionType: "HAHA",
+        reactionId: userReaction?.id,
+      });
+
+      const resBroaReaction = await toggleReactionMutation.request(
+        toggleReactionClient(validatedData)
+      );
+
+      setUserReaction(resBroaReaction);
+      setLocalBroa(resBroaReaction?.broa);
+    } catch (error) {
+      toggleReactionMutation.setError(handleClientValidationError(error));
+    }
+  }, [broa, user, userReaction]);
+
   return (
     <section
       className={`grid gap-4 p-8 bg-white rounded-base shadow-sm ${className}`}
@@ -47,8 +95,22 @@ const Card = ({ broa, className = "", editorMode = false }: Props) => {
         </p>
       </article>
       <footer className='flex justify-between items-center'>
-        <Button title='dar risada' Icon={EmojiHappyIcon} size='sm'>
-          0
+        <Button
+          title='dar risada'
+          Icon={EmojiHappyIcon}
+          size='sm'
+          isLoading={toggleReactionMutation.loading}
+          disabled={user === null || user === undefined}
+          className={`${
+            user
+              ? userReaction
+                ? ""
+                : "!bg-brand-gray-1 hover:!bg-brand-primary"
+              : "!text-brand-gray-3 !cursor-default"
+          }`}
+          onClick={handleReaction}
+        >
+          {localBroa?.reactions?.length ?? 0}
         </Button>
         <p className='text-base text-brand-gray-1'>
           {format(new Date(broa.createdAt), "dd/MM/yyyy 'às' HH:mm")}

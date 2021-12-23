@@ -8,7 +8,15 @@ export const getBroasController = async (
   res: NextApiResponse<ApiResponse<Broa[]>>
 ) => {
   try {
-    const broas = await prisma.broa.findMany();
+    const broas = await prisma.broa.findMany({
+      include: { reactions: true },
+      where: {
+        reactions: {
+          every: { reactionType: "HAHA" },
+        },
+      },
+    });
+
     res.status(200).json({ data: broas, errors: null });
   } catch (error) {
     console.log(error);

@@ -10,12 +10,16 @@ import {
 } from "../../features/client/broa/client";
 import EditBroaForm from "../../features/client/broa/components/editBroaForm";
 import Loading from "../../features/client/core/components/Loading";
+import MainLayout from "../../features/client/core/components/MainLayout";
 import useApi from "../../features/client/core/hooks/use_api";
-import { EditBroaValidationParams } from "../../features/shared/lib/validation";
+import { useAuthStore } from "../../features/client/core/stores/authStore";
+import { EditBroaValidationParams } from "../../features/shared/lib/validation/edit_broa_validator";
 
 const BroaPage: NextPage = () => {
   const [broa, setBroa] = useState<Broa | null>(null);
   const { query, replace } = useRouter();
+
+  const user = useAuthStore((state) => state.user);
 
   const updateBroaMutation = useApi<typeof updateBroaClient>();
   const deleteBroaMutation = useApi<typeof deleteBroaClient>();
@@ -45,7 +49,9 @@ const BroaPage: NextPage = () => {
   const handleDelete = async () => {
     if (!broa) return;
 
-    const res = await deleteBroaMutation.request(deleteBroaClient(broa.id));
+    const res = await deleteBroaMutation.request(
+      deleteBroaClient(broa.id, user!.id)
+    );
 
     if (!res) return;
 
@@ -53,7 +59,7 @@ const BroaPage: NextPage = () => {
   };
 
   return (
-    <main className='p-16'>
+    <MainLayout>
       {broa && (
         <>
           <header className='flex justify-end mx-auto mb-8 max-w-3xl'>
@@ -68,7 +74,7 @@ const BroaPage: NextPage = () => {
           <EditBroaForm
             broa={broa}
             className='mx-auto bg-white shadow-xl rounded-2xl p-8 max-w-3xl'
-            onSubmit={handleSubmit}
+            onSubmit={(data) => handleSubmit({ ...data, userId: user!.id })}
           />
         </>
       )}
@@ -79,7 +85,7 @@ const BroaPage: NextPage = () => {
           deleteBroaMutation.loading
         }
       />
-    </main>
+    </MainLayout>
   );
 };
 

@@ -1,10 +1,11 @@
+import jwt_decode from "jwt-decode";
 import Link from "next/link";
 import { useEffect } from "react";
+import { LoginWithGoogleValidationParams } from "../../../shared/lib/validation";
 import Button from "../../core/components/Button";
 import InputField from "../../core/components/InputField";
 import { links } from "../../core/data/links";
-import jwt_decode from "jwt-decode";
-import { LoginWithGoogleValidationParams } from "../../../shared/lib/validation";
+import { initializeGoogleLogin } from "../utils";
 
 type Props = {
   handleChange: (
@@ -27,32 +28,12 @@ export const AuthForm = ({
   useEffect(() => {
     if (type !== "login") return;
 
-    // TODO: refactor this to util
     async function handleCredentialResponse(response: any) {
       const decodedToken = jwt_decode(response.credential) as any;
       onLoginWithGoogle?.(decodedToken);
     }
 
-    // @ts-ignore
-    window.google.accounts.id.initialize({
-      client_id:
-        "463729900034-6ro4j66jeq4f6c4j7gbe57p7fmcnvptl.apps.googleusercontent.com",
-      callback: handleCredentialResponse,
-    });
-
-    // @ts-ignore
-    window.google.accounts.id.renderButton(
-      document.getElementById("buttonDiv"),
-      {
-        theme: "outline",
-        size: "medium",
-        shape: "pill",
-        text: "$ {button.text}",
-      } // customization attributes
-    );
-
-    // @ts-ignore
-    window.google.accounts.id.prompt();
+    initializeGoogleLogin(handleCredentialResponse);
   }, [type]);
 
   return (

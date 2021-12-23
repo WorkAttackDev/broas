@@ -17,3 +17,7 @@
 .logo-font {
   font-family: "Comforter", cursive;
 }
+
+#headlessui-portal-root {
+  @apply relative z-40;
+}

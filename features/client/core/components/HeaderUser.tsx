@@ -1,9 +1,10 @@
 import { Menu, Transition } from "@headlessui/react";
-import { LogoutIcon } from "@heroicons/react/outline";
+import { LogoutIcon, UserIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import Link from "next/link";
 import React, { forwardRef } from "react";
 import { MyUser } from "../../../shared/models/my_user";
+import { links } from "../data/links";
 import Loading from "./Loading";
 
 type Props = {
@@ -15,17 +16,18 @@ type Props = {
 type MenuItemProps = {
   onClick?: () => void;
   text: string;
+  Icon?: (props: React.ComponentProps<"svg">) => JSX.Element;
 };
 
 const MenuItem = forwardRef<HTMLAnchorElement, MenuItemProps>(
-  ({ onClick, text }, ref) => (
+  ({ onClick, text, Icon = LogoutIcon }, ref) => (
     <Menu.Item
       as='li'
       className='whitespace-nowrap  cursor-pointer hover:bg-brand-gray rounded-2xl '
     >
       {({ active }) => (
         <a ref={ref} onClick={onClick} className='flex items-center px-8 py-4'>
-          <LogoutIcon className='w-7 h-7 mr-4' />
+          <Icon className='w-7 h-7 mr-4' />
           <p className={`leading-none`}>{text}</p>
         </a>
       )}
@@ -36,7 +38,7 @@ const MenuItem = forwardRef<HTMLAnchorElement, MenuItemProps>(
 const HeaderUser = ({ user, isLoading, onLogout }: Props) => {
   return (
     <>
-      <Menu as='div' className='relative'>
+      <Menu as='div' className='relative z-20'>
         <Menu.Button className='relative overflow-hidden z-10 rounded-full w-16 h-16 bg-brand-gray-1 text-white text-xl leading-none border-2 border-brand-gray-1'>
           {user?.picture ? (
             <Image
@@ -75,7 +77,12 @@ const HeaderUser = ({ user, isLoading, onLogout }: Props) => {
               </div>
             )}
             {user ? (
-              <MenuItem text='terminar sessão' onClick={onLogout} />
+              <>
+                <Link href={links.profile} passHref>
+                  <MenuItem text='ver perfil' Icon={UserIcon} />
+                </Link>
+                <MenuItem text='terminar sessão' onClick={onLogout} />
+              </>
             ) : (
               <Link href='/auth' passHref>
                 <MenuItem text='iniciar sessão' />
