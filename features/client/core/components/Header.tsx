@@ -41,7 +41,7 @@ const Header = () => {
     );
 
     if (!newBroa) return;
-    setBroas(broas.concat(newBroa));
+    addBroa(newBroa);
     setIsOpen(false);
   };
 

@@ -1,3 +1,8 @@
+const fadeInKeyFrames = {
+  "0%": { opacity: 0 },
+  "100%": { opacity: 1 },
+};
+
 module.exports = {
   content: ["./pages/**/*.{js,ts,jsx,tsx}", "./features/**/*.{js,ts,jsx,tsx}"],
   mode: "jit",
@@ -13,6 +18,12 @@ module.exports = {
       },
       borderRadius: {
         base: "2rem",
+      },
+      keyframes: {
+        fadeInKeyFrames,
+      },
+      animation: {
+        fadeIn: "fadeInKeyFrames 1s ease-out",
       },
     },
   },

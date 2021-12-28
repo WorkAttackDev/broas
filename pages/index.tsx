@@ -1,7 +1,10 @@
 import { Broa } from ".prisma/client";
 import type { NextPage } from "next";
 import React, { useEffect } from "react";
-import { getBroasClient } from "../features/client/broa/client";
+import {
+  getBroasByBroaClient,
+  getBroasClient,
+} from "../features/client/broa/client";
 import ListBroas from "../features/client/broa/components/ListBroas";
 import { useBroasStore } from "../features/client/broa/stores/useBroasStore";
 import Loading from "../features/client/core/components/Loading";
@@ -21,21 +24,43 @@ export const Home: NextPage = () => {
   const { broas, setBroas } = useBroasStore();
 
   const getBroasApi = useApi<typeof getBroasClient>();
+  const getBroasByBroaQuery = useApi<typeof getBroasByBroaClient>();
 
   sortByDate<Broa>(broas);
 
   useEffect(() => {
     (async () => {
-      const data = await getBroasApi.request(getBroasClient());
-      if (!data) return;
-      setBroas(data);
+      await handleGetBroas();
     })();
   }, []);
 
+  const handleGetBroas = async () => {
+    const data = await getBroasApi.request(getBroasClient());
+    setBroas(data || []);
+  };
+
+  const handleSearch = async (search: string) => {
+    if (!search) {
+      await handleGetBroas();
+      return;
+    }
+
+    const searchedBroas = await getBroasByBroaQuery.request(
+      getBroasByBroaClient(search)
+    );
+
+    setBroas(searchedBroas || []);
+  };
+
   return (
     <MainLayout>
-      <ListBroas user={user} broas={broas} />
-      <Loading isLoading={getBroasApi.loading} />
+      <ListBroas
+        user={user}
+        broas={broas}
+        onSearch={handleSearch}
+        isLoading={getBroasApi.loading || getBroasByBroaQuery.loading}
+      />
+      {/* <Loading isLoading={} /> */}
     </MainLayout>
   );
 };

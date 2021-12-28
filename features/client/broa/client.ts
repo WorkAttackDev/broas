@@ -3,6 +3,7 @@ import { AxiosResponse } from "axios";
 import { ApiResponse } from "../../api/core/types";
 import { EditBroaValidationParams } from "../../shared/lib/validation/edit_broa_validator";
 import { ToggleReactionValidatorParams } from "../../shared/lib/validation/toggleReactionValidate";
+import { MyBroaReactions } from "../../shared/models/my_broa_reactions";
 import { AxiosInstance } from "../core/config/client";
 
 export const getBroasClient = async () => {
@@ -22,6 +23,14 @@ export const getBroasByUserIdClient = async (userId: number) => {
   const res = await AxiosInstance.get<any, AxiosResponse<ApiResponse<Broa[]>>>(
     "/broas/" + userId + "/broas"
   );
+  return res.data.data;
+};
+
+export const getBroasByBroaClient = async (wrongVersion: string) => {
+  const res = await AxiosInstance.get<
+    any,
+    AxiosResponse<ApiResponse<MyBroaReactions[]>>
+  >("/broas/search/" + wrongVersion);
   return res.data.data;
 };
 
