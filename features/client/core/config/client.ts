@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { ApiResponse } from "../../../api/core/types";
+import { ApiResponse } from "../../../shared/types";
 import { AuthRefreshTokenEndpoint } from "../../user/client";
 import { globalSetToken, useAuthStore } from "../stores/authStore";
 

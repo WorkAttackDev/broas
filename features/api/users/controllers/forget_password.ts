@@ -6,9 +6,9 @@ import {
   handleServerValidationError,
 } from "../../../shared/lib/server_errors";
 import { forgetPasswordValidate } from "../../../shared/lib/validation";
+import { ApiResponse } from "../../../shared/types";
 import { sendEmail } from "../../core/config/email/email";
 import { forgetPasswordHTMLTemplate } from "../../core/config/email/templates/forget_password";
-import { ApiResponse } from "../../core/types";
 
 const host = process.env.HOST;
 

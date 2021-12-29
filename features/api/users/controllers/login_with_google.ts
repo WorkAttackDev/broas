@@ -6,11 +6,11 @@ import {
 } from "../../../shared/lib/server_errors";
 import { loginWithGoogleValidation } from "../../../shared/lib/validation";
 import { MyUser } from "../../../shared/models/my_user";
-import { ApiResponse } from "../../core/types";
 import { hash } from "../util/hash";
 import { issueJWToken } from "../util/jwt";
 import { sanitizedUser, slugify } from "./util";
 import cuid from "cuid";
+import { ApiResponse } from "../../../shared/types";
 
 export const loginWithGoogleController = async (
   req: NextApiRequest,

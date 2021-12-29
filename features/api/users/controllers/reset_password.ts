@@ -5,7 +5,7 @@ import {
   handleServerValidationError,
 } from "../../../shared/lib/server_errors";
 import { resetPasswordValidate } from "../../../shared/lib/validation";
-import { ApiResponse } from "../../core/types";
+import { ApiResponse } from "../../../shared/types";
 
 import { hash } from "../util/hash";
 

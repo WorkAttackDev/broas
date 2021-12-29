@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../client/core/config/prisma";
 import { handleServerError } from "../../../shared/lib/server_errors";
 import { editBroaValidate } from "../../../shared/lib/validation/edit_broa_validator";
-import { ApiResponse } from "../../core/types";
+import { ApiResponse } from "../../../shared/types";
 
 export const updateBroaController = async (
   req: NextApiRequest,

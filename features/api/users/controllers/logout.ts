@@ -2,7 +2,7 @@ import Cookies from "cookies";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../client/core/config/prisma";
 import { handleServerError } from "../../../shared/lib/server_errors";
-import { ApiResponse } from "../../core/types";
+import { ApiResponse } from "../../../shared/types";
 import { API_SECRET, REFRESH_TOKEN_COOKIE_NAME } from "../util/jwt";
 
 export const logoutController = async (

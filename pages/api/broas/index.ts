@@ -15,7 +15,7 @@ export default async function handler(
 
   switch (method) {
     case "GET": {
-      await getBroasController(res);
+      await getBroasController(req, res);
       return;
     }
     default:

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../client/core/config/prisma";
 import { handleServerError } from "../../../shared/lib/server_errors";
 import { MyBroaReactions } from "../../../shared/models/my_broa_reactions";
-import { ApiResponse } from "../../core/types";
+import { ApiResponse } from "../../../shared/types";
 
 export const getBroaByBroaController = async (
   req: NextApiRequest,

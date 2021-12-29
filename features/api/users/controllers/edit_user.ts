@@ -7,7 +7,7 @@ import {
 import { tryCatch } from "../../../shared/lib/try_catch";
 import { editUserValidate } from "../../../shared/lib/validation/edit_user_validator";
 import { MyUser } from "../../../shared/models/my_user";
-import { ApiResponse } from "../../core/types";
+import { ApiResponse } from "../../../shared/types";
 import { sanitizedUser, slugify } from "./util";
 
 // export edit user name and user name

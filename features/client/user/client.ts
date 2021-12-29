@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios";
-import { ApiResponse } from "../../api/core/types";
 import {
   ForgetPasswordParams,
   LoginValidationParams,
@@ -8,6 +7,7 @@ import {
 } from "../../shared/lib/validation";
 import { EditUserValidationParams } from "../../shared/lib/validation/edit_user_validator";
 import { MyUser } from "../../shared/models/my_user";
+import { ApiResponse } from "../../shared/types";
 import { AxiosInstance } from "../core/config/client";
 
 // * Endpoints

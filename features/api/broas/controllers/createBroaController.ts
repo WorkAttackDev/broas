@@ -6,7 +6,7 @@ import {
   handleServerValidationError,
 } from "../../../shared/lib/server_errors";
 import { editBroaValidate } from "../../../shared/lib/validation/edit_broa_validator";
-import { ApiResponse } from "../../core/types";
+import { ApiResponse } from "../../../shared/types";
 
 export const createBroaController = async (
   req: NextApiRequest,

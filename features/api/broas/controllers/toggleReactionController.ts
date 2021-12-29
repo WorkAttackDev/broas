@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../client/core/config/prisma";
 import { handleServerError } from "../../../shared/lib/server_errors";
 import { toggleReactionValidate } from "../../../shared/lib/validation/toggleReactionValidate";
-import { ApiResponse } from "../../core/types";
+import { ApiResponse } from "../../../shared/types";
 
 export const toggleReactionController = async (
   req: NextApiRequest,

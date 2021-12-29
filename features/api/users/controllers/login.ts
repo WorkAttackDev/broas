@@ -6,7 +6,7 @@ import {
 } from "../../../shared/lib/server_errors";
 import { loginValidation } from "../../../shared/lib/validation";
 import { MyUser } from "../../../shared/models/my_user";
-import { ApiResponse } from "../../core/types";
+import { ApiResponse } from "../../../shared/types";
 import { compareHash } from "../util/hash";
 import { issueJWToken } from "../util/jwt";
 import { sanitizedUser } from "./util";

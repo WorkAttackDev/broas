@@ -2,9 +2,8 @@ import { Broa } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../client/core/config/prisma";
 import { handleServerError } from "../../../shared/lib/server_errors";
-import { ApiResponse } from "../../core/types";
+import { ApiResponse } from "../../../shared/types";
 
-// export a function named getBroasByUserNameController that receives a NextApiRequest and a NextApiResponse.
 export const getBroasByUserIdController = async (
   req: NextApiRequest,
   res: NextApiResponse<ApiResponse<Broa[]>>

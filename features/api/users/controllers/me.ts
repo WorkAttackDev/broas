@@ -6,8 +6,8 @@ import {
   handleServerValidationError,
 } from "../../../shared/lib/server_errors";
 import { MyUser } from "../../../shared/models/my_user";
+import { ApiResponse } from "../../../shared/types";
 import { AuthMiddleware } from "../../core/middlewares/auth";
-import { ApiResponse } from "../../core/types";
 import { sanitizedUser } from "./util";
 
 export const meController = async (
