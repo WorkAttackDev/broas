@@ -30,6 +30,10 @@ const SearchForm = ({ onSearch }: { onSearch?: (search: string) => void }) => {
     onSearch?.(searchInputRef.current?.value || "");
   };
 
+  const handleClearSearch = (e: FormEvent<HTMLInputElement>) => {
+    if (!e.currentTarget.value) onSearch?.("");
+  };
+
   return (
     <form
       className='relative max-w-lg text-xl mx-auto mb-12 bg-white rounded-lg'
@@ -37,6 +41,7 @@ const SearchForm = ({ onSearch }: { onSearch?: (search: string) => void }) => {
     >
       <span className='flex items-center'>
         <input
+          onInput={handleClearSearch}
           ref={searchInputRef}
           type='text'
           placeholder='pesquisar broa'

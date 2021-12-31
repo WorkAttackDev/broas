@@ -7,11 +7,11 @@ import MainLayout from "../features/client/core/components/MainLayout";
 import useApi from "../features/client/core/hooks/use_api";
 import { useAuthStore } from "../features/client/core/stores/authStore";
 
-// TODO: Connect Search text to the main get broas request
 // TODO: Add a side filter
 // TODO: Add a sort by
 // TODO: sync broas when user like a broa
 // TODO: Add reset search
+// TODO: Add a search and pagination to profile page
 
 export const Home: NextPage = () => {
   const user = useAuthStore((s) => s.user);
@@ -31,6 +31,8 @@ export const Home: NextPage = () => {
 
   const handleSearch = async (search: string) => {
     if (!search) {
+      if (!broaFilterBy.wrongVersion) return;
+
       setFilters({ wrongVersion: undefined });
       await getBroasApi.request(getBroasClient());
       return;
