@@ -5,18 +5,29 @@ import { ToggleReactionValidatorParams } from "../../shared/lib/validation/toggl
 import { MyBroaReactions } from "../../shared/models/my_broa_reactions";
 import { ApiResponse, PaginatedApiResponse } from "../../shared/types";
 import { AxiosInstance } from "../core/config/client";
-import { globalSetBroaPaginated } from "./stores/useBroasStore";
+import {
+  globalSetBroaPaginated,
+  PAGINATION_LIMIT,
+} from "./stores/useBroasStore";
 
-export const getBroasClient = async (page?: number, limit?: number) => {
+type GetBroasParams = {
+  page?: number;
+  limit?: number;
+  wrongVersion?: string;
+};
+
+export const getBroasClient = async (params?: GetBroasParams) => {
   try {
     const res = await AxiosInstance.get<
       any,
       AxiosResponse<PaginatedApiResponse<Broa[]>>
-    >(`/broas?page=${page ?? 0}&limit=${limit ?? 20}`);
+    >(
+      `/broas?limit=${params?.limit ?? PAGINATION_LIMIT}${
+        params?.page ? "&page=" + params.page : ""
+      }${params?.wrongVersion ? "&wrongVersion=" + params.wrongVersion : ""}`
+    );
 
     globalSetBroaPaginated(res.data.data, res.data.pagination);
-
-    console.log("getBroasClient", res.data);
 
     return res.data.data;
   } catch (error) {
@@ -29,14 +40,6 @@ export const getBroasByUserIdClient = async (userId: number) => {
   const res = await AxiosInstance.get<any, AxiosResponse<ApiResponse<Broa[]>>>(
     "/broas/" + userId + "/broas"
   );
-  return res.data.data;
-};
-
-export const getBroasByBroaClient = async (wrongVersion: string) => {
-  const res = await AxiosInstance.get<
-    any,
-    AxiosResponse<ApiResponse<MyBroaReactions[]>>
-  >("/broas/search/" + wrongVersion);
   return res.data.data;
 };
 

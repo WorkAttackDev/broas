@@ -21,3 +21,5 @@ export const sortByDate = <ListModel extends SortByDateArgs>(
       : 0;
   });
 };
+
+export const isProduction = process.env.NODE_ENV === "production";
