@@ -9,7 +9,6 @@ import { useAuthStore } from "../features/client/core/stores/authStore";
 import { BroaSortBy } from "../features/shared/broas.types";
 
 // TODO: Add a side filter
-// TODO: Add a sort by
 // TODO: sync broas when user like a broa
 // TODO: Add reset search
 // TODO: Add a search and pagination to profile page

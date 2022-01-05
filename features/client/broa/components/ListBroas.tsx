@@ -87,10 +87,10 @@ const ListBroas = ({
           }}
         />
       )}
-      <section className='grid grid-cols-4 items-start gap-8'>
+      <section className='grid sm:grid-cols-4 items-start gap-8'>
         <ul
           className={`w-full max-w-[102.4rem] mx-auto h-full flex flex-wrap -m-4 ${
-            onSortBy ? "col-span-3" : "col-span-4"
+            onSortBy ? "sm:col-span-3" : "col-span-4"
           }`}
         >
           {broas.length && !isLoading ? (
@@ -118,7 +118,12 @@ const ListBroas = ({
             </li>
           )}
         </ul>
-        {onSortBy && <BroasFilter className='col-span-1' onChange={onSortBy} />}
+        {onSortBy && (
+          <BroasFilter
+            className='col-span-1 -order-1 sm:order-1'
+            onChange={onSortBy}
+          />
+        )}
       </section>
       {pagination && (
         <section className='bg-white p-4 mt-12 flex items-center rounded-lg justify-between text-xl max-w-xl mx-auto sm:px-6'>
