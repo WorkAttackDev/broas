@@ -1,3 +1,6 @@
+// TODO refactor: put search in a separate component
+// TODO refactor: put pagination in a separate component
+
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -6,17 +9,20 @@ import {
 } from "@heroicons/react/outline";
 import { Broa } from "@prisma/client";
 import { FormEvent, useRef, useState } from "react";
+import { BroaSortBy } from "../../../shared/broas.types";
 import { MyBroaReactions } from "../../../shared/models/my_broa_reactions";
 import { MyUser } from "../../../shared/models/my_user";
 import { PaginationType } from "../../../shared/types";
 import Button from "../../core/components/Button";
 import Card from "../../core/components/Card";
+import { BroasFilter } from "./BroasFilter";
 
 type Props = {
   broas: Broa[] | MyBroaReactions[];
   pagination?: PaginationType;
   onNextPage?: () => void;
   onPrevPage?: () => void;
+  onSortBy?: (sortBy: BroaSortBy) => void;
   user: MyUser | null;
   isLoading?: boolean;
   onSearch?: (search: string) => void;
@@ -61,6 +67,7 @@ const ListBroas = ({
   isLoading = false,
   pagination,
   onSearch,
+  onSortBy,
   onNextPage,
   onPrevPage,
 }: Props) => {
@@ -80,33 +87,39 @@ const ListBroas = ({
           }}
         />
       )}
-
-      <ul className='max-w-[102.4rem] mx-auto h-full flex flex-wrap -m-4'>
-        {broas.length && !isLoading ? (
-          broas.map((broa) => (
+      <section className='grid grid-cols-4 items-start gap-8'>
+        <ul
+          className={`w-full max-w-[102.4rem] mx-auto h-full flex flex-wrap -m-4 ${
+            onSortBy ? "col-span-3" : "col-span-4"
+          }`}
+        >
+          {broas.length && !isLoading ? (
+            broas.map((broa) => (
+              <li
+                key={broa.id}
+                className='flex-auto m-4  min-w-[23rem] md:min-w-[30rem] max-w-[40rem] animate-fadeIn'
+              >
+                <Card broa={broa} user={user} />
+              </li>
+            ))
+          ) : (
             <li
-              key={broa.id}
-              className='flex-auto m-4  min-w-[23rem] md:min-w-[30rem] max-w-[40rem] animate-fadeIn'
+              className={`flex items-center text-center justify-center text-2xl text-brand-gray-3 p-8 bg-white rounded-2xl h-full m-4 w-full`}
             >
-              <Card broa={broa} user={user} />
-            </li>
-          ))
-        ) : (
-          <li
-            className={`flex items-center text-center justify-center text-2xl text-brand-gray-3 p-8 bg-white rounded-2xl h-full  w-full`}
-          >
-            {!isLoading ? (
-              hasText ? (
-                "Nenhum resultado encontrado!"
+              {!isLoading ? (
+                hasText ? (
+                  "Nenhum resultado encontrado!"
+                ) : (
+                  "Crie agora a sua broa!"
+                )
               ) : (
-                "Crie agora a sua broa!"
-              )
-            ) : (
-              <RefreshIcon className='w-8 h-8 md:w-12 md:h-12 animate-spin' />
-            )}
-          </li>
-        )}
-      </ul>
+                <RefreshIcon className='w-8 h-8 md:w-12 md:h-12 animate-spin' />
+              )}
+            </li>
+          )}
+        </ul>
+        {onSortBy && <BroasFilter className='col-span-1' onChange={onSortBy} />}
+      </section>
       {pagination && (
         <section className='bg-white p-4 mt-12 flex items-center rounded-lg justify-between text-xl max-w-xl mx-auto sm:px-6'>
           <div className='flex-1 flex justify-between'>

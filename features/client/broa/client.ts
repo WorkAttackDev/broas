@@ -1,5 +1,6 @@
 import { Broa, BroaReaction } from ".prisma/client";
 import { AxiosResponse } from "axios";
+import { BroaSortBy } from "../../shared/broas.types";
 import { EditBroaValidationParams } from "../../shared/lib/validation/edit_broa_validator";
 import { ToggleReactionValidatorParams } from "../../shared/lib/validation/toggleReactionValidate";
 import { MyBroaReactions } from "../../shared/models/my_broa_reactions";
@@ -14,6 +15,7 @@ type GetBroasParams = {
   page?: number;
   limit?: number;
   wrongVersion?: string;
+  sortBy?: BroaSortBy;
 };
 
 export const getBroasClient = async (params?: GetBroasParams) => {
@@ -22,9 +24,10 @@ export const getBroasClient = async (params?: GetBroasParams) => {
       any,
       AxiosResponse<PaginatedApiResponse<Broa[]>>
     >(
-      `/broas?limit=${params?.limit ?? PAGINATION_LIMIT}${
-        params?.page ? "&page=" + params.page : ""
-      }${params?.wrongVersion ? "&wrongVersion=" + params.wrongVersion : ""}`
+      `/broas?limit=${params?.limit ?? PAGINATION_LIMIT}
+      ${params?.page ? "&page=" + params.page : ""}
+      ${params?.wrongVersion ? "&wrongVersion=" + params.wrongVersion : ""}
+      ${params?.sortBy ? "&sortBy=" + params.sortBy : ""}`
     );
 
     globalSetBroaPaginated(res.data.data, res.data.pagination);

@@ -1,6 +1,7 @@
 import { Broa } from ".prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../client/core/config/prisma";
+import { type BroaSortBy } from "../../../shared/broas.types";
 import { handleServerError } from "../../../shared/lib/server_errors";
 import { PaginatedApiResponse } from "../../../shared/types";
 
@@ -8,21 +9,25 @@ export const getBroasController = async (
   req: NextApiRequest,
   res: NextApiResponse<PaginatedApiResponse<Broa[]>>
 ) => {
-  const { page, limit, wrongVersion } = req.query as {
+  const { page, limit, wrongVersion, sortBy = "recent" } = req.query as {
     page?: string;
     limit?: string;
     wrongVersion?: string;
+    sortBy?: BroaSortBy;
   };
 
   const currentPage = Number(page) || 0;
   const perPage = Number(limit) || 20;
+
+  const sortByReactions = sortBy === "smiles" ? "desc" : undefined;
+  const sortByDate = sortBy === "recent" ? "desc" : sortBy === "oldest" ? "asc" : undefined;
 
   try {
     const broas = await prisma.broa.findMany({
       skip: currentPage * perPage,
       take: perPage,
       include: { reactions: true },
-      orderBy: { updatedAt: "desc" },
+      orderBy: { updatedAt: sortByDate , reactions: sortByReactions ?  {_count: sortByReactions} : undefined   },
       where: {
         wrongVersion: {
           contains: wrongVersion,
