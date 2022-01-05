@@ -13,6 +13,7 @@ import { MyUser } from "../../../shared/models/my_user";
 import { toggleReactionClient } from "../../broa/client";
 import { links } from "../data/links";
 import useApi from "../hooks/use_api";
+import { useErrorStore } from "../stores/errorStore";
 import { handleClientValidationError } from "../utils/client_errors";
 import Button from "./Button";
 
@@ -26,6 +27,8 @@ type Props = {
 
 const Card = ({ broa, className = "", user }: Props) => {
   const toggleReactionMutation = useApi<typeof toggleReactionClient>();
+
+  const { setErrors, setIsOpen } = useErrorStore();
 
   const [userReaction, setUserReaction] = React.useState<BroaReaction | null>();
 
@@ -43,6 +46,13 @@ const Card = ({ broa, className = "", user }: Props) => {
     setUserReaction(foundedReaction);
     setEditorMode(broa?.userId === user?.id || user?.role === "ADMIN");
   }, [user, broa]);
+
+  useEffect(() => {
+    if (!toggleReactionMutation.error) return;
+
+    setErrors(toggleReactionMutation.error);
+    setIsOpen(true);
+  }, [toggleReactionMutation.error]);
 
   const handleReaction = useCallback(async () => {
     if (user === null || user === undefined) return;

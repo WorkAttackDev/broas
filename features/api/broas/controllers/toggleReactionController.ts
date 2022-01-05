@@ -34,6 +34,6 @@ export const toggleReactionController = async (
       .json({ data: reactionId ? null : broaReaction, errors: null });
   } catch (error) {
     console.log(error);
-    handleServerError(res, 500, ["Ocorreu um erro ao editar broa"]);
+    handleServerError(res, 500, ["Ocorreu um erro ao reagir a broa"]);
   }
 };

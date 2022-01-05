@@ -6,12 +6,13 @@ import { useBroasStore } from "../features/client/broa/stores/useBroasStore";
 import MainLayout from "../features/client/core/components/MainLayout";
 import useApi from "../features/client/core/hooks/use_api";
 import { useAuthStore } from "../features/client/core/stores/authStore";
+import { useErrorStore } from "../features/client/core/stores/errorStore";
 import { BroaSortBy } from "../features/shared/broas.types";
 
-// TODO: Add a side filter
 // TODO: sync broas when user like a broa
 // TODO: Add reset search
 // TODO: Add a search and pagination to profile page
+// TODO: Remove the side filter and add a dropdown filter
 // TODO: Add page by broa
 // TODO: Add share to facebook
 // TODO: Add Meme
@@ -20,6 +21,7 @@ import { BroaSortBy } from "../features/shared/broas.types";
 export const Home: NextPage = () => {
   const user = useAuthStore((s) => s.user);
   const { broas, broasPagination, broaFilter, setFilters } = useBroasStore();
+  const { setErrors, setIsOpen } = useErrorStore();
 
   const getBroasApi = useApi<typeof getBroasClient>();
 
@@ -28,6 +30,12 @@ export const Home: NextPage = () => {
       await handleGetBroas();
     })();
   }, []);
+
+  useEffect(() => {
+    if (!getBroasApi.error) return;
+    setErrors(getBroasApi.error);
+    setIsOpen(true);
+  }, [getBroasApi.error]);
 
   const handleGetBroas = async () => {
     await getBroasApi.request(getBroasClient());
@@ -62,6 +70,7 @@ export const Home: NextPage = () => {
         page: bp.page + 1,
         limit: bp.limit,
         wrongVersion: bfb.wrongVersion,
+        sortBy: bfb.sortBy,
       })
     );
   };
@@ -76,6 +85,7 @@ export const Home: NextPage = () => {
         page: bp.page - 1,
         limit: bp.limit,
         wrongVersion: bfb.wrongVersion,
+        sortBy: bfb.sortBy,
       })
     );
   };
@@ -92,6 +102,7 @@ export const Home: NextPage = () => {
         onSortBy={handleSortBy}
         isLoading={getBroasApi.loading}
       />
+
       {/* <Loading isLoading={} /> */}
     </MainLayout>
   );

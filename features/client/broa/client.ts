@@ -3,7 +3,6 @@ import { AxiosResponse } from "axios";
 import { BroaSortBy } from "../../shared/broas.types";
 import { EditBroaValidationParams } from "../../shared/lib/validation/edit_broa_validator";
 import { ToggleReactionValidatorParams } from "../../shared/lib/validation/toggleReactionValidate";
-import { MyBroaReactions } from "../../shared/models/my_broa_reactions";
 import { ApiResponse, PaginatedApiResponse } from "../../shared/types";
 import { AxiosInstance } from "../core/config/client";
 import {
@@ -19,24 +18,20 @@ type GetBroasParams = {
 };
 
 export const getBroasClient = async (params?: GetBroasParams) => {
-  try {
-    const res = await AxiosInstance.get<
-      any,
-      AxiosResponse<PaginatedApiResponse<Broa[]>>
-    >(
-      `/broas?limit=${params?.limit ?? PAGINATION_LIMIT}
-      ${params?.page ? "&page=" + params.page : ""}
-      ${params?.wrongVersion ? "&wrongVersion=" + params.wrongVersion : ""}
-      ${params?.sortBy ? "&sortBy=" + params.sortBy : ""}`
-    );
+  const res = await AxiosInstance.get<
+    any,
+    AxiosResponse<PaginatedApiResponse<Broa[]>>
+  >(
+    `/broas?limit=${params?.limit ?? PAGINATION_LIMIT}${
+      params?.page ? "&page=" + params.page : ""
+    }${params?.wrongVersion ? "&wrongVersion=" + params.wrongVersion : ""}${
+      params?.sortBy ? "&sortBy=" + params.sortBy : ""
+    }`
+  );
 
-    globalSetBroaPaginated(res.data.data, res.data.pagination);
+  globalSetBroaPaginated(res.data.data, res.data.pagination);
 
-    return res.data.data;
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
+  return res.data.data;
 };
 
 export const getBroasByUserIdClient = async (userId: number) => {
