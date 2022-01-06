@@ -4,20 +4,20 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getBroasByUserIdClient } from "../../features/client/broa/client";
 import ListBroas from "../../features/client/broa/components/ListBroas";
+import { useBroasStore } from "../../features/client/broa/stores/useBroasStore";
 import Button from "../../features/client/core/components/Button";
-import InputField from "../../features/client/core/components/InputField";
 import MainLayout from "../../features/client/core/components/MainLayout";
 import Modal from "../../features/client/core/components/Modal";
-import Popup from "../../features/client/core/components/Popup";
 import { links } from "../../features/client/core/data/links";
 import useApi from "../../features/client/core/hooks/use_api";
-import useForm from "../../features/client/core/hooks/use_form";
 import { useAuthStore } from "../../features/client/core/stores/authStore";
+import { useErrorStore } from "../../features/client/core/stores/errorStore";
 import { handleClientValidationError } from "../../features/client/core/utils/client_errors";
 import {
   editUserClient,
   logoutClient,
 } from "../../features/client/user/client";
+import EditUserForm from "../../features/client/user/components/EditUserForm";
 import {
   editUserValidate,
   EditUserValidationParams,
@@ -43,71 +43,39 @@ const Avatar = ({ user }: { user: MyUser | null }) => {
   );
 };
 
-type EditUserFormProps = {
-  isLoading?: boolean;
-  user: MyUser | null;
-  onSubmit: (formData: Omit<EditUserValidationParams, "id">) => void;
-};
-
-const EditUserForm = ({ user, onSubmit, isLoading }: EditUserFormProps) => {
-  const { formValues, handleChange } = useForm<
-    Omit<EditUserValidationParams, "id">
-  >({
-    userName: user?.userName || "",
-    name: user?.name || "",
-  });
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSubmit(formValues);
-  };
-
-  return (
-    <form className='grid gap-8' onSubmit={handleSubmit}>
-      <InputField
-        labelText='nome completo'
-        defaultValue={formValues.name}
-        onChange={(e) => handleChange(e, "name")}
-        maxLength={200}
-      />
-      <InputField
-        labelText='nome de usuário'
-        defaultValue={formValues.userName}
-        onChange={(e) => handleChange(e, "userName")}
-        maxLength={200}
-      />
-      <Button className='mr-0' isLoading={isLoading}>
-        editar usuário
-      </Button>
-    </form>
-  );
-};
-
 const ProfilePage: NextPage = ({}) => {
   const { user, setUser } = useAuthStore();
+  const { broas, broasPagination, broaFilter, setFilters } = useBroasStore();
 
   const { replace } = useRouter();
 
-  const [showPopup, setShowPopup] = useState(false);
+  const { setErrors, setIsOpen } = useErrorStore();
 
   const [showModal, setShowModal] = useState(false);
 
-  const { data, loading, request, error } =
-    useApi<typeof getBroasByUserIdClient>();
+  const { loading, request } = useApi<typeof getBroasByUserIdClient>();
 
   const logoutQuery = useApi<typeof logoutClient>();
+
   const editUserMutation = useApi<typeof editUserClient>();
 
   useEffect(() => {
     if (!user) return;
+    setFilters({ sortBy: "recent" });
 
-    request(getBroasByUserIdClient(user.id));
+    request(
+      getBroasByUserIdClient(user.id, {
+        page: 0,
+        sortBy: "recent",
+      })
+    );
   }, [user]);
 
   useEffect(() => {
-    if (error || logoutQuery.error || editUserMutation.error)
-      setShowPopup(true);
-  }, [error, logoutQuery.error, editUserMutation.error]);
+    if (!logoutQuery.error && !editUserMutation.error) return;
+    setErrors(logoutQuery.error || editUserMutation.error || []);
+    setIsOpen(true);
+  }, [logoutQuery.error, editUserMutation.error]);
 
   const handleLogout = async () => {
     const res = await logoutQuery.request(logoutClient());
@@ -130,6 +98,38 @@ const ProfilePage: NextPage = ({}) => {
     } catch (error) {
       handleClientValidationError(error);
     }
+  };
+
+  const handleGetNextBoas = async () => {
+    if (!user) return;
+
+    const bp = broasPagination;
+    const bfb = broaFilter;
+
+    if (bp.page + 1 >= Math.ceil(bp.total / bp.limit)) return;
+    await request(
+      getBroasByUserIdClient(user.id, {
+        page: bp.page + 1,
+        wrongVersion: bfb.wrongVersion,
+        sortBy: bfb.sortBy,
+      })
+    );
+  };
+
+  const handleGetPreviousBoas = async () => {
+    if (!user) return;
+
+    const bp = broasPagination;
+    const bfb = broaFilter;
+
+    if (bp.page < 0) return;
+    await request(
+      getBroasByUserIdClient(user.id, {
+        page: bp.page - 1,
+        wrongVersion: bfb.wrongVersion,
+        sortBy: bfb.sortBy,
+      })
+    );
   };
 
   return (
@@ -160,13 +160,18 @@ const ProfilePage: NextPage = ({}) => {
           </Button>
         </div>
       </section>
-      <ListBroas broas={data || []} user={user} isLoading={loading} />
 
-      <Popup
-        isOpen={showPopup}
-        texts={error || logoutQuery.error || editUserMutation.error || []}
-        onClose={() => setShowPopup(false)}
+      <ListBroas
+        user={user}
+        broas={broas}
+        onNextPage={handleGetNextBoas}
+        onPrevPage={handleGetPreviousBoas}
+        pagination={broasPagination}
+        // onSearch={handleSearch}
+        // onSortBy={handleSortBy}
+        isLoading={loading}
       />
+
       <Modal
         isOpen={showModal}
         title='editar usuário'

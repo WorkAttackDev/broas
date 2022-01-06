@@ -87,13 +87,15 @@ const ListBroas = ({
           }}
         />
       )}
-      <section className='grid sm:grid-cols-4 items-start sm:justify-items-end gap-8 sm:gap-12'>
+      <section className='grid  gap-8 sm:gap-12'>
+        {onSortBy && (
+          <BroasFilter
+            className='w-full max-w-xl mx-auto'
+            onChange={onSortBy}
+          />
+        )}
         <ul
-          className={`w-full max-w-[102.4rem] h-full flex flex-wrap sm:-m-4 ${
-            onSortBy
-              ? "sm:col-span-3 sm:flex-row-reverse"
-              : "mx-auto col-span-4"
-          }`}
+          className={`w-full max-w-[102.4rem] mx-auto h-full flex flex-wrap justify-center`}
         >
           {broas.length && !isLoading ? (
             broas.map((broa) => (
@@ -120,12 +122,6 @@ const ListBroas = ({
             </li>
           )}
         </ul>
-        {onSortBy && (
-          <BroasFilter
-            className='w-full -order-1 max-w-xl sm:order-1 sm:mr-auto'
-            onChange={onSortBy}
-          />
-        )}
       </section>
       {pagination && (
         <section className='bg-white p-4 mt-12 flex items-center rounded-lg justify-between text-xl max-w-xl mx-auto sm:px-6'>
@@ -138,7 +134,7 @@ const ListBroas = ({
               <ChevronLeftIcon className='h-5 w-5' aria-hidden='true' />
               <p>anterior</p>
             </Button>
-            <div className='flex items-center font-semibold'>
+            <div className='flex items-center mx-4 font-semibold'>
               <p className='sm:hidden'>
                 {pagination.page + 1} / {totalPages}
               </p>

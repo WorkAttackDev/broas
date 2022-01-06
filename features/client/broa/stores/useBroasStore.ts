@@ -3,7 +3,6 @@ import create from "zustand";
 import { BroaSortBy } from "../../../shared/broas.types";
 import { MyBroaReactions } from "../../../shared/models/my_broa_reactions";
 import { PaginationType } from "../../../shared/types";
-import { isProduction } from "../../core/utils";
 
 type BroaFilterType = {
   wrongVersion?: string;
@@ -20,7 +19,7 @@ type BroaStoreType = {
   addBroa: (broa: Broa | MyBroaReactions) => void;
 };
 
-export const PAGINATION_LIMIT = isProduction ? 20 : 2;
+export const PAGINATION_LIMIT = 20;
 
 export const useBroasStore = create<BroaStoreType>((set) => ({
   broas: [],

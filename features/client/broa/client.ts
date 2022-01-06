@@ -34,10 +34,23 @@ export const getBroasClient = async (params?: GetBroasParams) => {
   return res.data.data;
 };
 
-export const getBroasByUserIdClient = async (userId: number) => {
-  const res = await AxiosInstance.get<any, AxiosResponse<ApiResponse<Broa[]>>>(
-    "/broas/" + userId + "/broas"
+export const getBroasByUserIdClient = async (
+  userId: number,
+  params?: GetBroasParams
+) => {
+  const res = await AxiosInstance.get<
+    any,
+    AxiosResponse<PaginatedApiResponse<Broa[]>>
+  >(
+    `/broas/${userId}/broas?limit=${params?.limit ?? PAGINATION_LIMIT}${
+      params?.page ? "&page=" + params.page : ""
+    }${params?.wrongVersion ? "&wrongVersion=" + params.wrongVersion : ""}${
+      params?.sortBy ? "&sortBy=" + params.sortBy : ""
+    }`
   );
+
+  globalSetBroaPaginated(res.data.data, res.data.pagination);
+
   return res.data.data;
 };
 
