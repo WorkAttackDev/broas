@@ -9,11 +9,9 @@ import { useAuthStore } from "../features/client/core/stores/authStore";
 import { useErrorStore } from "../features/client/core/stores/errorStore";
 import { BroaSortBy } from "../features/shared/broas.types";
 
-// TODO: Add a search and pagination to profile page
-// TODO: Remove the side filter and add a dropdown filter
-// TODO: sync broas when user like a broa
 // TODO: Add page by broa
 // TODO: Add share to facebook
+// TODO: sync broas when user like a broa
 // TODO: Add Meme
 // TODO: Add Image support
 // TODO: Add reset search (90%)

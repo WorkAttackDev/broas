@@ -18,6 +18,7 @@ import {
   logoutClient,
 } from "../../features/client/user/client";
 import EditUserForm from "../../features/client/user/components/EditUserForm";
+import { BroaSortBy } from "../../features/shared/broas.types";
 import {
   editUserValidate,
   EditUserValidationParams,
@@ -100,6 +101,28 @@ const ProfilePage: NextPage = ({}) => {
     }
   };
 
+  const handleSearch = async (search: string) => {
+    if (!user) return;
+
+    if (!search) {
+      if (!broaFilter.wrongVersion) return;
+
+      setFilters({ wrongVersion: undefined });
+      await request(getBroasByUserIdClient(user.id));
+      return;
+    }
+
+    setFilters({ wrongVersion: search });
+    await request(getBroasByUserIdClient(user.id, { wrongVersion: search }));
+  };
+
+  const handleSortBy = async (sortBy: BroaSortBy) => {
+    if (!user) return;
+    setFilters({ sortBy });
+
+    await request(getBroasByUserIdClient(user.id, { sortBy }));
+  };
+
   const handleGetNextBoas = async () => {
     if (!user) return;
 
@@ -167,8 +190,8 @@ const ProfilePage: NextPage = ({}) => {
         onNextPage={handleGetNextBoas}
         onPrevPage={handleGetPreviousBoas}
         pagination={broasPagination}
-        // onSearch={handleSearch}
-        // onSortBy={handleSortBy}
+        onSearch={handleSearch}
+        onSortBy={handleSortBy}
         isLoading={loading}
       />
 

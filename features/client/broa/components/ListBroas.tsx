@@ -42,7 +42,7 @@ const SearchForm = ({ onSearch }: { onSearch?: (search: string) => void }) => {
 
   return (
     <form
-      className='relative max-w-lg text-xl mx-auto mb-12 bg-white rounded-lg'
+      className='relative max-w-lg text-xl  bg-white rounded-lg'
       onSubmit={handleSearch}
     >
       <span className='flex items-center'>
@@ -79,50 +79,51 @@ const ListBroas = ({
 
   return (
     <>
-      {onSearch && (
-        <SearchForm
-          onSearch={(text) => {
-            setHasText(!!text);
-            onSearch(text);
-          }}
-        />
-      )}
-      <section className='grid  gap-8 sm:gap-12'>
+      <section className='grid grid-flow-row gap-8 items-center justify-center  mb-12 sm:grid-flow-col sm:justify-between'>
+        {onSearch && (
+          <SearchForm
+            onSearch={(text) => {
+              setHasText(!!text);
+              onSearch(text);
+            }}
+          />
+        )}
+
         {onSortBy && (
           <BroasFilter
             className='w-full max-w-xl mx-auto'
             onChange={onSortBy}
           />
         )}
-        <ul
-          className={`w-full max-w-[102.4rem] mx-auto h-full flex flex-wrap justify-center`}
-        >
-          {broas.length && !isLoading ? (
-            broas.map((broa) => (
-              <li
-                key={broa.id}
-                className='flex-auto m-4  min-w-[23rem] md:min-w-[30rem] max-w-[40rem] animate-fadeIn'
-              >
-                <Card broa={broa} user={user} />
-              </li>
-            ))
-          ) : (
-            <li
-              className={`flex items-center text-center justify-center text-2xl text-brand-gray-3 p-8 bg-white rounded-2xl h-full m-4 w-full`}
-            >
-              {!isLoading ? (
-                hasText ? (
-                  "Nenhum resultado encontrado!"
-                ) : (
-                  "Crie agora a sua broa!"
-                )
-              ) : (
-                <RefreshIcon className='w-8 h-8 md:w-12 md:h-12 animate-spin' />
-              )}
-            </li>
-          )}
-        </ul>
       </section>
+      <ul
+        className={`w-full max-w-[102.4rem] mx-auto h-full flex flex-wrap justify-center sm:justify-start`}
+      >
+        {broas.length && !isLoading ? (
+          broas.map((broa) => (
+            <li
+              key={broa.id}
+              className='flex-auto m-4  min-w-[23rem] md:min-w-[30rem] max-w-[40rem] animate-fadeIn'
+            >
+              <Card broa={broa} user={user} />
+            </li>
+          ))
+        ) : (
+          <li
+            className={`flex items-center text-center justify-center text-2xl text-brand-gray-3 p-8 bg-white rounded-2xl h-full m-4 w-full`}
+          >
+            {!isLoading ? (
+              hasText ? (
+                "Nenhum resultado encontrado!"
+              ) : (
+                "Crie agora a sua broa!"
+              )
+            ) : (
+              <RefreshIcon className='w-8 h-8 md:w-12 md:h-12 animate-spin' />
+            )}
+          </li>
+        )}
+      </ul>
       {pagination && (
         <section className='bg-white p-4 mt-12 flex items-center rounded-lg justify-between text-xl max-w-xl mx-auto sm:px-6'>
           <div className='flex-1 flex justify-between'>
