@@ -9,7 +9,7 @@ import { useAuthStore } from "../features/client/core/stores/authStore";
 import { useErrorStore } from "../features/client/core/stores/errorStore";
 import { BroaSortBy } from "../features/shared/broas.types";
 
-// TODO: Add page by broa
+// Todo: Add Create account
 // TODO: Add share to facebook
 // TODO: sync broas when user like a broa
 // TODO: Add Meme

@@ -12,7 +12,7 @@ type Props = {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     key: any
   ) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
   onLoginWithGoogle?: (data: LoginWithGoogleValidationParams) => void;
   type?: "login" | "signup" | "forgot-password" | "reset-password";
   submitText: string;
@@ -26,7 +26,7 @@ export const AuthForm = ({
   type = "login",
 }: Props) => {
   useEffect(() => {
-    if (type !== "login") return;
+    if (!["login", "signup"].includes(type)) return;
 
     async function handleCredentialResponse(response: any) {
       const decodedToken = jwt_decode(response.credential) as any;
@@ -56,17 +56,17 @@ export const AuthForm = ({
                 iniciar sessão
               </a>
             </Link>
-            <button
-              type='button'
-              disabled
-              className={` w-full border-b-2 ${
-                type === "signup"
-                  ? "border-brand-gray-3 text-brand-gray-3 cursor-default"
-                  : "text-brand-gray-1"
-              } disabled:cursor-not-allowed`}
-            >
-              criar conta
-            </button>
+            <Link href={links.signup}>
+              <a
+                className={`flex justify-center items-center w-full border-b-2 ${
+                  type === "signup"
+                    ? "border-brand-gray-3 text-brand-gray-3 cursor-default"
+                    : "text-brand-gray-1"
+                } disabled:cursor-not-allowed`}
+              >
+                criar conta
+              </a>
+            </Link>
           </>
         ) : (
           <p
@@ -77,7 +77,7 @@ export const AuthForm = ({
         )}
       </div>
       <fieldset className='grid gap-8 px-16'>
-        {type !== "reset-password" && (
+        {!["reset-password", "signup"].includes(type) && (
           <InputField
             autoComplete='email'
             type='email'
@@ -86,7 +86,7 @@ export const AuthForm = ({
             onChange={(e) => handleChange(e, "email")}
           />
         )}
-        {type !== "forgot-password" && (
+        {!["forgot-password", "signup"].includes(type) && (
           <InputField
             type='password'
             labelText='password'
@@ -105,8 +105,10 @@ export const AuthForm = ({
         )}
       </fieldset>
       <section className='flex justify-between flex-wrap items-center mx-16'>
-        <Button type='submit'>{submitText}</Button>
-        {type === "login" && <div id='buttonDiv'></div>}
+        <Button type='submit' disabled={type === "signup"}>
+          {submitText}
+        </Button>
+        {["login", "signup"].includes(type) && <div id='buttonDiv'></div>}
       </section>
       {type === "login" && (
         <Link href={links.forgotPassword}>

@@ -15,7 +15,7 @@ export const initializeGoogleLogin = (
       theme: "outline",
       size: "medium",
       shape: "pill",
-      text: "$ {button.text}",
+      text: "continue_with",
     } // customization attributes
   );
 

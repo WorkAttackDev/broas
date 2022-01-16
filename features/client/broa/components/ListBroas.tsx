@@ -79,7 +79,7 @@ const ListBroas = ({
 
   return (
     <>
-      <section className='grid grid-flow-row gap-8 items-center justify-center  mb-12 sm:grid-flow-col sm:justify-between'>
+      <section className='grid grid-flow-row gap-8 mx-auto items-center justify-center max-w-[102.4rem] mb-12 sm:grid-flow-col sm:justify-between'>
         {onSearch && (
           <SearchForm
             onSearch={(text) => {
@@ -96,14 +96,12 @@ const ListBroas = ({
           />
         )}
       </section>
-      <ul
-        className={`w-full max-w-[102.4rem] mx-auto h-full flex flex-wrap justify-center sm:justify-start`}
-      >
+      <ul className={`w-full max-w-[70rem] mx-auto h-full flex flex-col`}>
         {broas.length && !isLoading ? (
           broas.map((broa) => (
             <li
               key={broa.id}
-              className='flex-auto m-4  min-w-[23rem] md:min-w-[30rem] max-w-[40rem] animate-fadeIn'
+              className='flex-auto flex-shrink-0 m-4  min-w-[23rem] md:min-w-[30rem] animate-fadeIn'
             >
               <Card broa={broa} user={user} />
             </li>
