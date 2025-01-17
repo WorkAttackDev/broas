@@ -7,10 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
-  referentialIntegrity = "prisma"
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 // emuns
@@ -49,6 +48,7 @@ model User {
   tokens       Token[]
   Broa         Broa[]
   BroaReaction BroaReaction[]
+
   @@map("users")
 }
 
@@ -78,6 +78,7 @@ model Broa {
   createdAt    DateTime @default(now())
 
   reactions BroaReaction[]
+
   @@map("broas")
 }
 
