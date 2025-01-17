@@ -1,6 +1,6 @@
 import { Menu, Transition } from "@headlessui/react";
 import { LogoutIcon, UserIcon } from "@heroicons/react/outline";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import React, { forwardRef } from "react";
 import { MyUser } from "../../../shared/models/my_user";

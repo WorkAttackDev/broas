@@ -40,15 +40,6 @@ const filters: Filter[] = [
 export const BroasFilter = ({ className = "", onChange }: Props) => {
   const broaFilter = useBroasStore((s) => s.broaFilter);
   return (
-    <Dropdown
-      title={filters[0].title}
-      options={filters[0].options}
-      defaultOption={filters[0].options.find(
-        (option) => option.value === broaFilter.sortBy
-      )}
-      onSelectOption={(option) => onChange?.(option.value as BroaSortBy)}
-    />
-
     // <section
     //   className={`grid gap-4 p-8 bg-white rounded-base shadow-sm text-xl ${className}`}
     // >
@@ -80,5 +71,13 @@ export const BroasFilter = ({ className = "", onChange }: Props) => {
     //     </article>
     //   ))}
     // </section>
+    (<Dropdown
+      title={filters[0].title}
+      options={filters[0].options}
+      defaultOption={filters[0].options.find(
+        (option) => option.value === broaFilter.sortBy
+      )}
+      onSelectOption={(option) => onChange?.(option.value as BroaSortBy)}
+    />)
   );
 };
